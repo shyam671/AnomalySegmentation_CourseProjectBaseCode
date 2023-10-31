@@ -1,19 +1,11 @@
 # Real-Time-Anomaly-Segmentation [Course Project]
-This is 
-
-This code is a toolbox that uses **PyTorch** for training and evaluating the **ERFNet** architecture for semantic segmentation.
-
-
-NOTE: This PyTorch version has a slightly better result than the ones in the Torch version (used in the paper): 72.1 IoU in Val set and 69.8 IoU in test set.
-
-
-
+This repository provides a starter-code setup for the Real-Time Anomaly Segmentation project of the Machine Learning Course [Link](https://docs.google.com/document/d/1ElljsAprT2qX8RpePSQ3E00y_3oXrtN_CKYC6wqxyFQ/edit?usp=sharing). It consists of the code base for training ERFNet on the Cityscapes dataset and perform anomaly segmentation.
 
 ## Packages
 For instructions, please refer to the README in each folder:
 
 * [train](train) contains tools for training the network for semantic segmentation.
-* [eval](eval) contains tools for evaluating/visualizing the network's output.
+* [eval](eval) contains tools for evaluating/visualizing the network's output and performing anomaly segmentation.
 * [imagenet](imagenet) Contains script and model for pretraining ERFNet's encoder in Imagenet.
 * [trained_models](trained_models) Contains the trained models used in the papers. 
 
@@ -25,7 +17,6 @@ For instructions, please refer to the README in each folder:
 * **Additional Python packages**: numpy, matplotlib, Pillow, torchvision and visdom (optional for --visualize flag)
 * For testing the anomaly segmentation model: Road Anomaly, Road Obstacle, and Fishyscapes dataset. All testing images are provided here [Link](https://drive.google.com/file/d/1r2eFANvSlcUjxcerjC8l6dRa0slowMpx/view).
 
-
-## License
-
-This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License, which allows for personal and research use only. For a commercial license please contact the authors. You can view a license summary here: http://creativecommons.org/licenses/by-nc/4.0/
+## Anomaly Inference:
+* The repo provides a pre-trained ERFNet on the cityscapes dataset that can be used to perform anomaly segmentation on test anomaly datasets.
+* Anomaly Inference Command:```python evalAnomaly.py --input '/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png```. Change the dataset path ```'/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png```accordingly.
