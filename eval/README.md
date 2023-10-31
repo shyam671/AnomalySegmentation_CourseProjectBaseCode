@@ -6,6 +6,15 @@ Currently there are 4 usable functions to evaluate stuff:
 - eval_iou
 - eval_forwardTime
 
+## evalAnomaly.py
+
+This code can be used to produce anomaly segmentation results on various anomaly metrics.
+
+**Examples:**
+```
+python evalAnomaly.py --input '/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png'
+```
+
 ## eval_cityscapes_color.py 
 
 This code can be used to produce segmentation of the Cityscapes images in color for visualization purposes. By default it saves images in eval/save_color/ folder. You can also visualize results in visdom with --visualize flag.
