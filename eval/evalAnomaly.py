@@ -93,11 +93,11 @@ def main():
                 result = model(images).squeeze(0)
             if args.method == 'msp':
                 # MSP with temperature scaling
-                anomaly_result = 1.0 - torch.max(F.softmax(result / args.temperature, dim=0), dim=0)
+                anomaly_result = 1.0 - torch.max(F.softmax(result / args.temperature, dim=0), dim=0)[0]
             elif args.method == 'maxlogit':
-                anomaly_result = 1.0 - torch.max(result, dim=0)
+                anomaly_result = 1.0 - torch.max(result, dim=0)[0]
             elif args.method == 'maxentropy':
-                anomaly_result = - torch.sum(F.softmax(result, dim=0) * F.log_softmax(result, dim=0), dim=0)
+                anomaly_result = - torch.sum(F.softmax(result, dim=0) * F.log_softmax(result, dim=0), dim=0)[0]
             anomaly_result = anomaly_result.data.cpu().numpy()
             pathGT = path.replace('images', 'labels_masks')
             if 'RoadObsticle21' in pathGT:
