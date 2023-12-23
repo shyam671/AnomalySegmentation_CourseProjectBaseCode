@@ -31,7 +31,8 @@ def main():
     parser = ArgumentParser()
     parser.add_argument(
         '--input',
-        default='/home/shyam/Mask2Former/unk-eval/RoadObsticle21/images/*.webp',
+        type=str,
+        default='/content/validation_dataset/RoadObsticle21/images/*.webp',
         nargs='+',
         help='A list of space separated input images; '
         'or a single glob pattern such as "directory/*.jpg"',
@@ -82,78 +83,80 @@ def main():
     print ('Model and weights LOADED successfully')
     model.eval()
 
-    for path in glob.glob(os.path.expanduser(str(args.input[0]))):
-        print(path)
-        images = torch.from_numpy(np.array(Image.open(path).convert('RGB'))).unsqueeze(0).float()
-        images = images.permute(0, 3, 1, 2)
-        with torch.no_grad():
-            result = model(images).squeeze(0)
-        if args.method == 'msp':
-            # MSP with temperature scaling
-            anomaly_result = 1.0 - torch.max(F.softmax(result / args.temperature, dim=0), dim=0)
-        elif args.method == 'maxlogit':
-            anomaly_result = 1.0 - torch.max(result, dim=0)
-        elif args.method == 'maxentropy':
-            anomaly_result = - torch.sum(F.softmax(result, dim=0) * F.log_softmax(result, dim=0), dim=0)
-        anomaly_result = anomaly_result.data.cpu().numpy()
-        pathGT = path.replace('images', 'labels_masks')
-        if 'RoadObsticle21' in pathGT:
-           pathGT = pathGT.replace('webp', 'png')
-        if 'fs_static' in pathGT:
-           pathGT = pathGT.replace('jpg', 'png')                
-        if 'RoadAnomaly' in pathGT:
-           pathGT = pathGT.replace('jpg', 'png')  
+    for dataset_path in args.input:
 
-        mask = Image.open(pathGT)
-        ood_gts = np.array(mask)
+        for path in glob.glob(os.path.expanduser(dataset_path)):
+            print(path)
+            images = torch.from_numpy(np.array(Image.open(path).convert('RGB'))).unsqueeze(0).float()
+            images = images.permute(0, 3, 1, 2)
+            with torch.no_grad():
+                result = model(images).squeeze(0)
+            if args.method == 'msp':
+                # MSP with temperature scaling
+                anomaly_result = 1.0 - torch.max(F.softmax(result / args.temperature, dim=0), dim=0)
+            elif args.method == 'maxlogit':
+                anomaly_result = 1.0 - torch.max(result, dim=0)
+            elif args.method == 'maxentropy':
+                anomaly_result = - torch.sum(F.softmax(result, dim=0) * F.log_softmax(result, dim=0), dim=0)
+            anomaly_result = anomaly_result.data.cpu().numpy()
+            pathGT = path.replace('images', 'labels_masks')
+            if 'RoadObsticle21' in pathGT:
+                pathGT = pathGT.replace('webp', 'png')
+            if 'fs_static' in pathGT:
+                pathGT = pathGT.replace('jpg', 'png')                
+            if 'RoadAnomaly' in pathGT:
+                pathGT = pathGT.replace('jpg', 'png')  
 
-        if 'RoadAnomaly' in pathGT:
-            ood_gts = np.where((ood_gts == 2), 1, ood_gts)
-        if 'LostAndFound' in pathGT:
-            ood_gts = np.where((ood_gts == 0), 255, ood_gts)
-            ood_gts = np.where((ood_gts == 1), 0, ood_gts)
-            ood_gts = np.where((ood_gts > 1) & (ood_gts < 201), 1, ood_gts)
+            mask = Image.open(pathGT)
+            ood_gts = np.array(mask)
 
-        if 'Streethazard' in pathGT:
-            ood_gts = np.where((ood_gts == 14), 255, ood_gts)
-            ood_gts = np.where((ood_gts < 20), 0, ood_gts)
-            ood_gts = np.where((ood_gts == 255), 1, ood_gts)
+            if 'RoadAnomaly' in pathGT:
+                ood_gts = np.where((ood_gts == 2), 1, ood_gts)
+            if 'LostAndFound' in pathGT:
+                ood_gts = np.where((ood_gts == 0), 255, ood_gts)
+                ood_gts = np.where((ood_gts == 1), 0, ood_gts)
+                ood_gts = np.where((ood_gts > 1) & (ood_gts < 201), 1, ood_gts)
 
-        if 1 not in np.unique(ood_gts):
-            continue
-        else:
-            ood_gts_list.append(ood_gts)
-            anomaly_score_list.append(anomaly_result)
-            ood_gts_list.append(ood_gts)
-            anomaly_score_list.append(anomaly_result)
-        del result, anomaly_result, ood_gts, mask
-        torch.cuda.empty_cache()
+            if 'Streethazard' in pathGT:
+                ood_gts = np.where((ood_gts == 14), 255, ood_gts)
+                ood_gts = np.where((ood_gts < 20), 0, ood_gts)
+                ood_gts = np.where((ood_gts == 255), 1, ood_gts)
 
-    file.write('\n')
+            if 1 not in np.unique(ood_gts):
+                continue
+            else:
+                ood_gts_list.append(ood_gts)
+                anomaly_score_list.append(anomaly_result)
+            del result, anomaly_result, ood_gts, mask
+            torch.cuda.empty_cache()
 
-    ood_gts = np.array(ood_gts_list)
-    anomaly_scores = np.array(anomaly_score_list)
+        file.write('\n')
 
-    ood_mask = ood_gts == 1
-    ind_mask = ood_gts == 0
+        ood_gts = np.array(ood_gts_list)
+        anomaly_scores = np.array(anomaly_score_list)
 
-    ood_out = anomaly_scores[ood_mask]
-    ind_out = anomaly_scores[ind_mask]
+        ood_mask = ood_gts == 1
+        ind_mask = ood_gts == 0
 
-    ood_label = np.ones(len(ood_out))
-    ind_label = np.zeros(len(ind_out))
+        ood_out = anomaly_scores[ood_mask]
+        ind_out = anomaly_scores[ind_mask]
 
-    val_out = np.concatenate((ind_out, ood_out))
-    val_label = np.concatenate((ind_label, ood_label))
+        ood_label = np.ones(len(ood_out))
+        ind_label = np.zeros(len(ind_out))
 
-    prc_auc = average_precision_score(val_label, val_out)
-    fpr = fpr_at_95_tpr(val_out, val_label)
+        val_out = np.concatenate((ind_out, ood_out))
+        val_label = np.concatenate((ind_label, ood_label))
 
-    print(f'AUPRC score: {prc_auc*100.0}')
-    print(f'FPR@TPR95: {fpr*100.0}')
+        prc_auc = average_precision_score(val_label, val_out)
+        fpr = fpr_at_95_tpr(val_out, val_label)
 
-    file.write((f'Method: {args.method}     Dataset: {args.input.split('/')[-3]}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95:{fpr * 100.0}'))
-    file.close()
+        print(f'Method: {args.method}')
+        print(f'Dataset: {args.method}')
+        print(f'AUPRC score: {prc_auc*100.0}')
+        print(f'FPR@TPR95: {fpr*100.0}')
+
+        file.write(f'Method: {args.method}     Dataset: {dataset_path.split("/")[-3]}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95:{fpr * 100.0}')
+        file.close()
 
 
 if __name__ == '__main__':
