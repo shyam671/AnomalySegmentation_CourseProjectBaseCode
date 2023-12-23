@@ -12,7 +12,6 @@ from argparse import ArgumentParser
 from ood_metrics import fpr_at_95_tpr, calc_metrics, plot_roc, plot_pr, plot_barcode
 from sklearn.metrics import roc_auc_score, roc_curve, auc, precision_recall_curve, average_precision_score
 import torch.nn.functional as F
-import torch.nn.functional as F
 
 seed = 42
 
@@ -82,9 +81,6 @@ def main():
     model = load_my_state_dict(model, torch.load(weightspath, map_location=lambda storage, loc: storage))
     print ('Model and weights LOADED successfully')
     model.eval()
-
-    # get scale temperature
-    temperature = args.temperature
 
     for path in glob.glob(os.path.expanduser(str(args.input[0]))):
         print(path)
@@ -156,7 +152,7 @@ def main():
     print(f'AUPRC score: {prc_auc*100.0}')
     print(f'FPR@TPR95: {fpr*100.0}')
 
-    file.write(('    AUPRC score:' + str(prc_auc * 100.0) + '   FPR@TPR95:' + str(fpr * 100.0)))
+    file.write((f'Method: {args.method}     Dataset: {args.input.split('/')[-3]}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95:{fpr * 100.0}'))
     file.close()
 
 
