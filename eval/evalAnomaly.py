@@ -44,7 +44,7 @@ def main():
     parser.add_argument('--batch-size', type=int, default=1)
     parser.add_argument('--cpu', action='store_true')
     parser.add_argument('--method', type=str, default='msp')
-    parser.add_argument('--temperature', type=int, default=1)
+    parser.add_argument('--temperature', type=float, default=1)
     args = parser.parse_args()
     anomaly_score_list = []
     ood_gts_list = []
@@ -93,7 +93,7 @@ def main():
         elif args.method == 'maxlogit':
             anomaly_result = 1.0 - torch.max(result, dim=0)[0]
         elif args.method == 'maxentropy':
-            anomaly_result = - torch.sum(F.softmax(result, dim=0) * F.log_softmax(result, dim=0), dim=0)[0]
+            anomaly_result = torch.div(torch.sum(- F.softmax(result, dim=0) * F.log_softmax(result, dim=0), dim=0), torch.log(torch.tensor(result.size(0))))
         anomaly_result = anomaly_result.data.cpu().numpy()
         pathGT = path.replace('images', 'labels_masks')
         if 'RoadObsticle21' in pathGT:
@@ -123,7 +123,7 @@ def main():
         else:
             ood_gts_list.append(ood_gts)
             anomaly_score_list.append(anomaly_result)
-        del result, anomaly_result, ood_gts, mask
+        del result, anomaly_result, ood_gts, mask, images
         torch.cuda.empty_cache()
 
     file.write('\n')
@@ -146,12 +146,13 @@ def main():
     prc_auc = average_precision_score(val_label, val_out)
     fpr = fpr_at_95_tpr(val_out, val_label)
 
+    dataset = args.input.split("/")[-3]
     print(f'Method: {args.method}')
-    print(f'Dataset: {args.input}')
+    print(f'Dataset: {dataset}')
     print(f'AUPRC score: {prc_auc*100.0}')
     print(f'FPR@TPR95: {fpr*100.0}')
 
-    file.write(f'Method: {args.method}     Dataset: {args.input.split("/")[-3]}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95:{fpr * 100.0}')
+    file.write(f'Method: {args.method}     Dataset: {dataset}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95: {fpr * 100.0}')
     file.close()
 
 

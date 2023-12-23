@@ -12,7 +12,7 @@ This code can be used to produce anomaly segmentation results on various anomaly
 
 **Examples:**
 ```
-python evalAnomaly.py --input '/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png'
+python evalAnomaly.py --input='/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png'
 ```
 
 ## eval_cityscapes_color.py 
