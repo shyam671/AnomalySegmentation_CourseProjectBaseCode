@@ -15,6 +15,11 @@ This code can be used to produce anomaly segmentation results on various anomaly
 python evalAnomaly.py --input='/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png'
 ```
 
+For the _MSP_ method, you can also optionally specify the temperature scaling value as:
+```
+python evalAnomaly.py --method='msp' --temperature=2 --input='/home/shyam/ViT-Adapter/segmentation/unk-dataset/RoadAnomaly21/images/*.png'
+```
+
 ## eval_cityscapes_color.py 
 
 This code can be used to produce segmentation of the Cityscapes images in color for visualization purposes. By default it saves images in eval/save_color/ folder. You can also visualize results in visdom with --visualize flag.

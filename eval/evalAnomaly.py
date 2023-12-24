@@ -149,10 +149,12 @@ def main():
     dataset = args.input.split("/")[-3]
     print(f'Method: {args.method}')
     print(f'Dataset: {dataset}')
+    if args.method == 'msp':
+        print(f'Temperature: {args.temperature}')
     print(f'AUPRC score: {prc_auc*100.0}')
     print(f'FPR@TPR95: {fpr*100.0}')
 
-    file.write(f'Method: {args.method}     Dataset: {dataset}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95: {fpr * 100.0}')
+    file.write(f'Method: {args.method}     Dataset: {dataset}{f"   Temperature: {args.temperature}" if args.method == "msp" else ""}    AUPRC score: {prc_auc * 100.0}   FPR@TPR95: {fpr * 100.0}')
     file.close()
 
 
