@@ -42,6 +42,9 @@ def main():
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--batch-size', type=int, default=1)
     parser.add_argument('--cpu', action='store_true')
+    # ADDED FOR THE PROJECT
+    parser.add_argument('--method', default='msp')
+    ####
     args = parser.parse_args()
     anomaly_score_list = []
     ood_gts_list = []
@@ -84,11 +87,19 @@ def main():
         images = images.permute(0,3,1,2)
         with torch.no_grad():
             result = model(images)
-        anomaly_result = 1.0 - np.max(result.squeeze(0).data.cpu().numpy(), axis=0)            
+        # ADDED FOR THE PROJECT
+        if args.method == 'msp':
+            softmax_probs = torch.nn.functional.softmax(result.squeeze(0), dim=0)
+            anomaly_result = 1.0 - np.max(softmax_probs.data.cpu().numpy(), axis=0)
+        elif args.method == 'maxLogit':
+            anomaly_result = 1.0 - np.max(result.squeeze(0).data.cpu().numpy(), axis=0)
+        ####            
         pathGT = path.replace("images", "labels_masks")                
         if "RoadObsticle21" in pathGT:
+           Dataset_string = "Road Obstacle 21"
            pathGT = pathGT.replace("webp", "png")
         if "fs_static" in pathGT:
+           Dataset_string = "FS Static"
            pathGT = pathGT.replace("jpg", "png")                
         if "RoadAnomaly" in pathGT:
            pathGT = pathGT.replace("jpg", "png")  
@@ -97,8 +108,10 @@ def main():
         ood_gts = np.array(mask)
 
         if "RoadAnomaly" in pathGT:
+            Dataset_string = "Road Anomaly"
             ood_gts = np.where((ood_gts==2), 1, ood_gts)
         if "LostAndFound" in pathGT:
+            Dataset_string = "Lost & Found"
             ood_gts = np.where((ood_gts==0), 255, ood_gts)
             ood_gts = np.where((ood_gts==1), 0, ood_gts)
             ood_gts = np.where((ood_gts>1)&(ood_gts<201), 1, ood_gts)
@@ -139,7 +152,9 @@ def main():
     print(f'AUPRC score: {prc_auc*100.0}')
     print(f'FPR@TPR95: {fpr*100.0}')
 
-    file.write(('    AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0) ))
+    # SOME EXTRA WRITING ON THE FILE IN ORDER TO BE MORE READABLE
+    file.write('############################### '+ str(Dataset_string) + ' ###############################')
+    file.write(('Method:' + str(args.method) +'   AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0) ))
     file.close()
 
 if __name__ == '__main__':
