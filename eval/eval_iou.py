@@ -136,7 +136,7 @@ def main(args):
     file.write("\n=======================================\n")
     #iouStr = getColorEntry(iouVal)+'{:0.2f}'.format(iouVal*100) + '\033[0m'
     iouStr = '{:0.2f}'.format(iouVal*100)
-    file.write ("MEAN IoU: ", iouStr, "%")
+    file.write ("MEAN IoU: "+iouStr+"%")
 
 if __name__ == '__main__':
     parser = ArgumentParser()

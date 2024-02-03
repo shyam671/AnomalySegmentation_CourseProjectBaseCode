@@ -92,7 +92,7 @@ def main():
             softmax_probs = torch.nn.functional.softmax(result.squeeze(0), dim=0)
             anomaly_result = 1.0 - np.max(softmax_probs.data.cpu().numpy(), axis=0)
         elif args.method == 'maxLogit':
-            anomaly_result = 1.0 - np.max(result.squeeze(0).data.cpu().numpy(), axis=0)
+            anomaly_result = -(np.max(result.squeeze(0).data.cpu().numpy(), axis=0))
         ####            
         pathGT = path.replace("images", "labels_masks")                
         if "RoadObsticle21" in pathGT:
