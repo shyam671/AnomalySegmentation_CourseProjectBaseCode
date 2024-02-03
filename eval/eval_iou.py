@@ -101,39 +101,41 @@ def main(args):
 
     iou_classes_str = []
     for i in range(iou_classes.size(0)):
-        iouStr = getColorEntry(iou_classes[i])+'{:0.2f}'.format(iou_classes[i]*100) + '\033[0m'
+        #iouStr = getColorEntry(iou_classes[i])+'{:0.2f}'.format(iou_classes[i]*100) + '\033[0m'
+        iouStr = '{:0.2f}'.format(iou_classes[i]*100)
         iou_classes_str.append(iouStr)
 
     if not os.path.exists('mIoU_results.txt'):
         open('mIoU_results.txt', 'w').close()
     file = open('mIoU_results.txt', 'a')
+
     print("---------------------------------------")
     print("Took ", time.time()-start, "seconds")
-    file.write("Model: ERFNET")
-    file.write("=======================================")
+    file.write("================================ Model: ERFNET ================================\n")
     #print("TOTAL IOU: ", iou * 100, "%")
-    file.write("Per-Class IoU:")
-    file.write(iou_classes_str[0], "Road")
-    file.write(iou_classes_str[1], "sidewalk")
-    file.write(iou_classes_str[2], "building")
-    file.write(iou_classes_str[3], "wall")
-    file.write(iou_classes_str[4], "fence")
-    file.write(iou_classes_str[5], "pole")
-    file.write(iou_classes_str[6], "traffic light")
-    file.write(iou_classes_str[7], "traffic sign")
-    file.write(iou_classes_str[8], "vegetation")
-    file.write(iou_classes_str[9], "terrain")
-    file.write(iou_classes_str[10], "sky")
-    file.write(iou_classes_str[11], "person")
-    file.write(iou_classes_str[12], "rider")
-    file.write(iou_classes_str[13], "car")
-    file.write(iou_classes_str[14], "truck")
-    file.write(iou_classes_str[15], "bus")
-    file.write(iou_classes_str[16], "train")
-    file.write(iou_classes_str[17], "motorcycle")
-    file.write(iou_classes_str[18], "bicycle")
-    file.write("=======================================")
-    iouStr = getColorEntry(iouVal)+'{:0.2f}'.format(iouVal*100) + '\033[0m'
+    file.write("Per-Class IoU:\n")
+    file.write("Road -----> " + iou_classes_str[0])
+    file.write("\nsidewalk -----> " + iou_classes_str[1])
+    file.write("\nbuilding -----> " + iou_classes_str[2])
+    file.write("\nwall -----> " + iou_classes_str[3])
+    file.write("\nfence -----> " + iou_classes_str[4])
+    file.write("\npole -----> " + iou_classes_str[5])
+    file.write("\ntraffic light -----> " + iou_classes_str[6])
+    file.write("\ntraffic sign -----> " + iou_classes_str[7])
+    file.write("\nvegetation -----> " + iou_classes_str[8])
+    file.write("\nterrain -----> " + iou_classes_str[9])
+    file.write("\nsky -----> " + iou_classes_str[10])
+    file.write("\nperson -----> " + iou_classes_str[11])
+    file.write("\nrider -----> " + iou_classes_str[12])
+    file.write("\ncar -----> " + iou_classes_str[13])
+    file.write("\ntruck -----> " + iou_classes_str[14])
+    file.write("\nbus -----> " + iou_classes_str[15])
+    file.write("\ntrain -----> " + iou_classes_str[16])
+    file.write("\nmotorcycle -----> " + iou_classes_str[17])
+    file.write("\nbicycle -----> " + iou_classes_str[18])
+    file.write("\n=======================================\n")
+    #iouStr = getColorEntry(iouVal)+'{:0.2f}'.format(iouVal*100) + '\033[0m'
+    iouStr = '{:0.2f}'.format(iouVal*100)
     file.write ("MEAN IoU: ", iouStr, "%")
 
 if __name__ == '__main__':

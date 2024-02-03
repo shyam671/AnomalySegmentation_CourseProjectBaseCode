@@ -153,8 +153,9 @@ def main():
     print(f'FPR@TPR95: {fpr*100.0}')
 
     # SOME EXTRA WRITING ON THE FILE IN ORDER TO BE MORE READABLE
-    file.write('############################### '+ str(Dataset_string) + ' ###############################')
+    file.write('############################### '+ str(Dataset_string) + ' ###############################\n')
     file.write(('Method:' + str(args.method) +'   AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0) ))
+    file.write('\n\n')
     file.close()
 
 if __name__ == '__main__':
