@@ -188,7 +188,7 @@ def evaluate_model(args):
     print(f'Temperature : {temperature}')
     # SOME EXTRA WRITING ON THE FILE IN ORDER TO BE MORE READABLE
     file.write('############################### ' + str(Dataset_string) + ' ###############################\n')
-    file.write(('Method:' + str(args.method) + '   AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0)))
+    file.write(('Method:' + str(args.method) + '   AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0)+ "with Temperature: " + str(temperature)))
     file.write('\n\n')
     file.close()
 
