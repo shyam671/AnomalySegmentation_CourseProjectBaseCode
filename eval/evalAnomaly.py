@@ -48,10 +48,11 @@ def main():
     parser.add_argument('--temperature', default=1.0)
     ####
     args = parser.parse_args()
-
-    if args.temperature != -1:  # Check if temperature argument is set to 1
+    #print(float(args.temperature)==-1.0)
+    if float(args.temperature) != -1.0:  # Check if temperature argument is set to 1
         evaluate_model(args)  # If temperature is !=-1, evaluate the model with default temperature
     else:
+        print(f"Finding best temperature scaling ")
         # Initialize temperature values for grid search
         t_values = [0.01, 0.04, 0.05, 0.08, 0.1]
         best_t = None
@@ -188,7 +189,7 @@ def evaluate_model(args):
     print(f'Temperature : {temperature}')
     # SOME EXTRA WRITING ON THE FILE IN ORDER TO BE MORE READABLE
     file.write('############################### ' + str(Dataset_string) + ' ###############################\n')
-    file.write(('Method:' + str(args.method) + '   AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0)+ "with Temperature: " + str(temperature)))
+    file.write(('Method:' + str(args.method) + '   AUPRC score:' + str(prc_auc*100.0) + '   FPR@TPR95:' + str(fpr*100.0)+ " with Temperature: " + str(temperature)))
     file.write('\n\n')
     file.close()
 
