@@ -1,22 +1,22 @@
 
 ############################### LostAndFound ###############################
-Method:maxLogit   AUPRC score:0.21394580339077093   FPR@TPR95:96.44090608320006with Temperature: 1.0
+Method:maxLogit   AUPRC score:0.21394580339077093   FPR@TPR95:96.44090608320006 with Temperature: 1.0
 
 
 ############################### LostAndFound ###############################
-Method:msp   AUPRC score:0.2570842545979514   FPR@TPR95:95.82944394908544with Temperature: 1.0
+Method:msp   AUPRC score:0.2570842545979514   FPR@TPR95:95.82944394908544 with Temperature: 1.0
 
 
 ############################### Road Anomaly ###############################
-Method:maxLogit   AUPRC score:8.707969189060414   FPR@TPR95:93.76407140544615with Temperature: 1.0
+Method:maxLogit   AUPRC score:8.707969189060414   FPR@TPR95:93.76407140544615 with Temperature: 1.0
 
 
 ############################### Road Anomaly ###############################
-Method:msp   AUPRC score:9.427066386288296   FPR@TPR95:95.30102648970976with Temperature: 1.0
+Method:msp   AUPRC score:9.427066386288296   FPR@TPR95:95.30102648970976 with Temperature: 1.0
 
 
 ############################### Road Anomaly ###############################
-Method:maxEntr   AUPRC score:9.106994287519719   FPR@TPR95:95.31258807669772with Temperature: 1.0
+Method:maxEntr   AUPRC score:9.106994287519719   FPR@TPR95:95.31258807669772 with Temperature: 1.0
 
 
 ############################### FS Static ###############################
